@@ -87,7 +87,13 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # Create tabs for different sections
-tab1, tab2, tab3, tab4 = st.tabs(["🎮 Interactive Tool", "📚 Theory Behind the Model", "📖 Comprehensive Tutorial", "🛠️ Practical Labs"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "🎮 Interactive Tool", 
+    "📚 Theory Behind the Model", 
+    "📖 Comprehensive Tutorial", 
+    "🛠️ Practical Labs",
+    "🧠 The Very Basics of Options"
+])
 
 with tab1:
     # Calculate option price and Greeks
@@ -298,59 +304,48 @@ with tab3:
 # Define parameter-setting callbacks
 ########################################
 def set_lab1_parameters():
-    """Parameters for a highly volatile, near-term call option."""
     st.session_state["S_slider"] = 100.0
     st.session_state["K_slider"] = 100.0
-    # T ~ 1 month = 0.08 years
-    st.session_state["T_slider"] = 0.08
+    st.session_state["T_slider"] = 0.08  # ~1 month
     st.session_state["r_slider"] = 0.02
     st.session_state["sigma_slider"] = 0.4
     st.session_state["option_type_radio"] = 'call'
 
 def set_lab2_parameters():
-    """Parameters for examining Gamma scalping with moderate maturity and higher volatility."""
     st.session_state["S_slider"] = 100.0
     st.session_state["K_slider"] = 100.0
-    # T=0.5 years (6 months)
-    st.session_state["T_slider"] = 0.5
+    st.session_state["T_slider"] = 0.5   # 6 months
     st.session_state["r_slider"] = 0.02
     st.session_state["sigma_slider"] = 0.4
-    # Typically, you'd compare call vs. put for a risk reversal, so choose whichever to start with
     st.session_state["option_type_radio"] = 'call'
 
 def set_lab3_parameters():
-    """Parameters for short-dated ATM option to showcase strong Theta decay."""
     st.session_state["S_slider"] = 100.0
     st.session_state["K_slider"] = 100.0
-    # ~1 week in years
-    st.session_state["T_slider"] = 0.02
+    st.session_state["T_slider"] = 0.02  # ~1 week
     st.session_state["r_slider"] = 0.01
     st.session_state["sigma_slider"] = 0.2
     st.session_state["option_type_radio"] = 'call'
 
 def set_lab4_parameters():
-    """Parameters for exploring Vega sensitivity around earnings or volatility events."""
     st.session_state["S_slider"] = 100.0
     st.session_state["K_slider"] = 100.0
-    # T=0.1 years ~ about 1.2 months
-    st.session_state["T_slider"] = 0.1
+    st.session_state["T_slider"] = 0.1   # ~1.2 months
     st.session_state["r_slider"] = 0.02
     st.session_state["sigma_slider"] = 0.2
     st.session_state["option_type_radio"] = 'call'
 
 def set_lab5_parameters():
-    """Parameters to explore Rho effects with higher interest rates and longer maturity."""
     st.session_state["S_slider"] = 100.0
     st.session_state["K_slider"] = 100.0
-    # T=2 years
-    st.session_state["T_slider"] = 2.0
+    st.session_state["T_slider"] = 2.0   # 2 years
     st.session_state["r_slider"] = 0.05
     st.session_state["sigma_slider"] = 0.2
     st.session_state["option_type_radio"] = 'call'
 
 
 ########################################
-# Tab 4: Practical Labs
+# Tab 4: Practical Labs (Accordion style via Radio)
 ########################################
 with tab4:
     st.header("🔬 Practical Option Labs")
@@ -362,8 +357,28 @@ with tab4:
     Experiment, take notes, and enjoy exploring how options behave under different market conditions!
     """)
 
+    # --- Additional Disclaimer ---
+    st.warning("""
+    **Disclaimer**:  
+    The author does *not* use options or option trading as an investment strategy, 
+    nor does he recommend that any retail investor should. 
+    This material is purely for educational and illustrative purposes.
+    """)
+
+    # A radio to choose one of the labs
+    lab_choice = st.radio(
+        "Select a lab to view:",
+        ("Lab 1: Delta Hedging",
+         "Lab 2: Gamma Scalping",
+         "Lab 3: Time Decay",
+         "Lab 4: Volatility Shocks",
+         "Lab 5: Interest Rates & Rho"),
+        index=0
+    )
+
     # ---------------- Lab 1 ----------------
-    with st.expander("🏦 Lab 1: Delta Hedging in a Volatile Market", expanded=True):
+    if lab_choice == "Lab 1: Delta Hedging":
+        st.subheader("🏦 Lab 1: Delta Hedging in a Volatile Market")
         st.markdown("""
         **Real-World Scenario:**  
         You're a portfolio manager holding **100 call options** during earnings season. The stock is **highly volatile**.  
@@ -378,13 +393,13 @@ with tab4:
 
         - **Owning vs. Shorting Shares**: 
           - If your net Delta is +50, you can **short 50 shares** to bring total Delta to zero. 
-          - Now, if the stock price rises, your short shares lose money, but the calls gain value — ideally canceling out.
+          - If the stock price rises, your short shares lose money but the calls gain value—ideally canceling out.
 
         - **Why Hedge?**  
           - Delta-hedging removes immediate exposure to price moves, letting you potentially profit from other factors 
             (like time decay or changes in volatility).  
-          - As the stock price changes, Delta changes too, so you must **rebalance** your share position periodically. 
-            This is **dynamic hedging**.
+          - As the stock price changes, Delta changes too, so you must **rebalance** your share position periodically 
+            (dynamic hedging).
 
         **Learning Objective:**  
         - Understand how **Delta** acts as a hedge ratio.
@@ -405,12 +420,13 @@ with tab4:
         - How does a higher σ (volatility) affect how quickly Δ changes (i.e., Gamma)?  
         - What happens to Δ and Gamma as expiration approaches?
         """)
-        
-        # Button: set recommended Lab 1 parameters
+
+        # Button to set recommended Lab 1 parameters
         st.button("⚡ Set Lab 1 Parameters", on_click=set_lab1_parameters, key="lab1_setup")
 
     # ---------------- Lab 2 ----------------
-    with st.expander("💥 Lab 2: Gamma Scalping & The 'Convexity' Effect"):
+    elif lab_choice == "Lab 2: Gamma Scalping":
+        st.subheader("💥 Lab 2: Gamma Scalping & The 'Convexity' Effect")
         st.markdown("""
         **Real-World Scenario:**  
         You hold a position that is **long Gamma** (e.g., a long call + short put at the same strike, or any 
@@ -427,8 +443,8 @@ with tab4:
         1. Click "**Set Lab 2 Parameters**" to pick an ATM strike, T=6 months, σ=40%.
         2. Go to the main tool tab and note the **Gamma**. 
         3. Move the **Stock Price (S)** slider around 90–110. Watch how Delta changes.
-        4. Think about how you'd buy low and sell high in the underlying shares to lock in small gains each time 
-           Delta changes.
+        4. Think about how you'd buy low and sell high in the underlying shares each time 
+           Delta changes to lock in small gains.
 
         **Key Insight**:  
         - **High Gamma** → Delta changes quickly with small price moves → more frequent rebalancing opportunities 
@@ -438,11 +454,11 @@ with tab4:
         - How does Gamma behave as your option goes deeper ITM or OTM?  
         - Why is Gamma typically **highest near-the-money** and **near expiration**?
         """)
-        
         st.button("⚡ Set Lab 2 Parameters", on_click=set_lab2_parameters, key="lab2_setup")
 
     # ---------------- Lab 3 ----------------
-    with st.expander("⏳ Lab 3: Time Decay (Theta) in Short-Dated Options"):
+    elif lab_choice == "Lab 3: Time Decay":
+        st.subheader("⏳ Lab 3: Time Decay (Theta) in Short-Dated Options")
         st.markdown("""
         **Real-World Scenario:**  
         You've **sold** a short-term (1-week) **ATM call**. Each day that passes, the option loses **time value** 
@@ -467,15 +483,15 @@ with tab4:
         - Why do deeply ITM or far OTM options have relatively smaller Theta near expiration?  
         - How does high volatility interact with Theta?
         """)
-        
         st.button("⚡ Set Lab 3 Parameters", on_click=set_lab3_parameters, key="lab3_setup")
 
     # ---------------- Lab 4 ----------------
-    with st.expander("🌩️ Lab 4: Volatility Shocks (Vega) and Market Repricing"):
+    elif lab_choice == "Lab 4: Volatility Shocks":
+        st.subheader("🌩️ Lab 4: Volatility Shocks (Vega) and Market Repricing")
         st.markdown("""
         **Real-World Scenario:**  
         You own a **long straddle** (long call + long put) on a stock about to announce earnings. 
-        A jump in implied volatility (IV) could significantly increase the option’s price, 
+        A jump in implied volatility (IV) can significantly increase the option’s price, 
         even if the stock doesn’t move much initially. This is a **long Vega** position.
 
         **Learning Objective:**  
@@ -498,11 +514,11 @@ with tab4:
         - Would you prefer to be long or short Vega ahead of a known volatility event (e.g., earnings)?  
         - Does Vega’s magnitude depend on time to expiration (T) and strike moneyness?
         """)
-        
         st.button("⚡ Set Lab 4 Parameters", on_click=set_lab4_parameters, key="lab4_setup")
 
     # ---------------- Lab 5 ----------------
-    with st.expander("💹 Lab 5: Interest Rates & Rho — Impact on Calls vs. Puts"):
+    else:  # lab_choice == "Lab 5: Interest Rates & Rho"
+        st.subheader("💹 Lab 5: Interest Rates & Rho — Impact on Calls vs. Puts")
         st.markdown("""
         **Real-World Scenario:**  
         In a rising interest rate environment (e.g., rates going from 2% to 5–10%), 
@@ -528,6 +544,174 @@ with tab4:
         - Does Rho matter much for short-dated options?  
         - How might you hedge interest rate exposure on long-dated options?
         """)
-        
         st.button("⚡ Set Lab 5 Parameters", on_click=set_lab5_parameters, key="lab5_setup")
 
+
+with tab5:
+    st.header("🧠 The Very Basics of Options")
+
+    # Modern UI-style disclaimer (Bootstrap-like "alert-danger")
+    st.markdown("""
+<div style="
+    background-color: #f8d7da; 
+    color: #721c24; 
+    padding: 20px; 
+    border-radius: 8px; 
+    margin-bottom: 20px;
+">
+  <h4 style="margin-top: 0;">
+    <strong>IMPORTANT DISCLAIMER</strong>
+  </h4>
+  <ul style="list-style-type: disc; padding-left: 1.5em;">
+    <li>Options are a <em>powerful, complex tool</em> widely used by professional investors who typically have 
+      <strong>many years of formal education and intensive training</strong>.</li>
+    <li>Even these professionals often <strong>fail to outperform</strong> a simple buy-and-hold strategy 
+      in a diversified index, as <strong>Warren Buffett</strong> and numerous 
+      <strong>Nobel Prize-winning economists</strong> have demonstrated.</li>
+    <li>The reality is that <strong>markets are smarter</strong> than any individual, making consistent 
+      outperformance extremely difficult.</li>
+    <li>If you’d like more insight into how challenging it is to "beat the market," watch 
+      <a href="https://www.youtube.com/watch?v=SwkjqGd8NC4" 
+         style="color: #721c24; text-decoration: underline;">Winning the Losing Game</a>, 
+      and explore the 
+      <a href="https://rationalreminder.ca/podcast" 
+         style="color: #721c24; text-decoration: underline;">Rational Reminder podcast</a>.</li>
+    <li>The author’s main interest here is <strong>intellectual curiosity</strong> about the science and tools of finance, 
+      not promoting active option trading.</li>
+    <li>This material is <strong>purely educational</strong>. The author does <strong>not</strong> recommend any retail investor 
+      engage in options trading.</li>
+  </ul>
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("""
+    ### 1. What Are Options?
+
+    **Options** are **contracts** that let you "lock in" a price to **buy** or **sell** a stock, 
+    without forcing you to actually do it. Think of them like a **reservation**:
+    - A **Call Option** is a reservation to **buy** a stock at a certain *strike price* before the option expires.
+    - A **Put Option** is a reservation to **sell** a stock at a certain *strike price* before the option expires.
+
+    If it ends up being a good deal (e.g., the stock price goes above your call's strike), 
+    you can use your option ("exercise" it). If not, you can simply let it expire. 
+    You **never** have to use your reservation.
+
+    ---
+
+    ### 2. Why Do People Use Options?
+
+    1. **To Potentially Profit If the Market Moves**  
+       - If you think a stock will go **up**, you might **buy a call**. 
+         When the stock does rise above your strike, your option can become **very valuable**.
+       - If you think it'll go **down**, you might **buy a put**. 
+         If the stock price falls below your put's strike, you can sell at that higher fixed price.
+
+    2. **To Protect Existing Stocks (Hedging)**  
+       - If you **already own** shares and worry about a drop in price, 
+         you can buy a **put** as insurance. If the stock falls a lot, 
+         your put can offset some of the losses.
+
+    3. **To Earn Income**  
+       - Some people **sell** options (like selling insurance). 
+         They collect money upfront (the premium), but if the market moves 
+         strongly in the buyer's favor, the seller has significant risk.
+
+    ---
+
+    ### 3. A Simple Example
+
+    - **Buying a Call** on a stock at €100 (strike) for a €2 premium:
+      - If the stock price goes to €110, you can buy it at €100 using your call 
+        and potentially sell it at €110 in the market. That could yield a profit 
+        (minus the €2 you paid).
+      - If the stock never goes above €100, you won't use your call. 
+        You just lose the €2 you paid.
+
+    This is similar to paying for a ticket that might be valuable later if conditions are right.
+
+    ---
+
+    ### 4. How People Trade Options on a Broker Platform
+
+    1. **Pick a Stock** (e.g., Apple).
+    2. **Select an Expiration Date** (maybe 1 month or 6 months from now).
+    3. **Choose a Strike Price** (the price you're locking in).
+    4. **Choose Call or Put** (buy or sell):
+       - **Buy a Call**: You pay the premium to have the right to buy the stock.
+       - **Buy a Put**: You pay the premium to have the right to sell the stock.
+       - **Sell a Call/Put**: You collect the premium but take on the obligation 
+         if the buyer exercises their right.
+
+    Once you confirm, your broker shows your option position in your account. 
+    The value of that position changes day by day, based on:
+    - The stock’s price changing,
+    - Time passing (options lose value as they get closer to expiration, all else equal),
+    - Changes in market volatility (bigger expected swings often make options more expensive).
+
+    ---
+
+    ### 5. What Is the Black-Scholes Model?
+
+    This is a **mathematical formula** to figure out a "fair" price for an option, 
+    assuming you know:
+    - How volatile the stock is (σ),
+    - How much time remains (T),
+    - What the stock price (S) and strike (K) are,
+    - The risk-free interest rate (r).
+
+    Professionals use this model to **estimate** how much an option should cost 
+    and to see how sensitive it is to changes in the stock price or volatility.
+
+    ---
+
+    ### 6. Understanding "Delta Hedging" (An Advanced, But Important Idea)
+
+    - **Delta** is just a number that tells you **how much** an option's price might 
+      change if the stock moves by €1.
+    - For example, if a call has a Delta of 0.50, that means if the stock price goes up by €1, 
+      the call might increase by about €0.50.
+
+    **Delta hedging** means:
+    1. You figure out your total Delta. 
+       - For instance, if you own 2 call options (each covering 100 shares) 
+         and each has Delta = 0.50, your total Delta is 0.50 × 200 = 100. 
+         (It's as if you own 100 shares.)
+    2. If you **don’t** want to be exposed to big stock moves, you can **short 100 shares** 
+       (i.e., borrow shares and sell them). 
+       - This way, if the stock price goes up, you **lose** on the short shares but **gain** on the calls, 
+         roughly canceling out.
+    3. If the stock price goes down, your calls lose some value, but the short shares gain.
+    4. Because Delta changes as the stock price moves (Gamma effect), professionals keep **rebalancing**. 
+       This is **dynamic hedging**—they’re constantly adjusting how many shares they hold short (or long).
+
+    **Why do it?**  
+    - Professionals often want to earn money from **time decay** or changes in volatility, 
+      rather than guessing whether a stock goes up or down. By hedging Delta, 
+      they remove the "directional" risk.
+
+    ---
+
+    ### 7. What Professional Investors Do
+
+    1. **Hedging a Portfolio**: 
+       If a big fund owns many stocks, it might buy puts for protection, 
+       or it might use Delta hedging to keep overall risk manageable.
+    2. **Speculating (Directional Bets)**: 
+       If they strongly believe a stock will rise, 
+       they might buy calls to amplify potential gains with less initial cash outlay.
+    3. **Collecting Premiums (Selling Options)**: 
+       Some funds or traders sell options regularly, aiming to profit from the "time decay" 
+       if prices don’t move dramatically.
+
+    ---
+
+    ### 8. Key Takeaways (No Jargon)
+
+    - **Options** let you fix a buy or sell price in the future, but you only exercise if it benefits you.
+    - **Call** = right to buy; **Put** = right to sell.
+    - **Black-Scholes** is a famous formula to help price options and understand their risk.
+    - **Delta Hedging** is when you buy or sell shares to **balance out** (hedge) the effect of price moves on your option position.
+    - **Even professionals** find it difficult to beat a diversified index fund consistently.
+    - **Professional Investors** often combine options with shares to manage risk or speculate, 
+      adjusting positions (sometimes daily) to keep their profits and losses more predictable.
+    """)
