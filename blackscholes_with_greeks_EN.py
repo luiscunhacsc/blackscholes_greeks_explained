@@ -71,10 +71,21 @@ with st.sidebar:
 
     # Disclaimer and license
     st.markdown("---")
-    st.markdown("""
+    st.markdown(
+    """
     **⚠️ Disclaimer**  
-    *Educational purposes only. No accuracy guarantees.*  
-    """)
+    *Educational purposes only. No accuracy guarantees. Do not use options as an investment tool if you are not a qualified professional investor.*  
+    
+    <small>
+    The author does not engage in option trading and does not endorse it for non-professional investors. 
+    All information provided is for educational purposes only and should not be construed as financial or 
+    investment advice. Option trading involves significant risks and may not be suitable for all investors. 
+    Always consult a qualified financial professional before making any investment decisions.
+    </small>
+    """,
+    unsafe_allow_html=True
+    )
+
     
     st.markdown("""
     <div style="margin-top: 20px;">
