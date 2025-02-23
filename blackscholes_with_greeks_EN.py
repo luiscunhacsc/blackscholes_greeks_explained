@@ -583,7 +583,7 @@ with tab5:
       outperformance extremely difficult.</li>
     <li>If you’d like more insight into how challenging it is to "beat the market," watch 
       <a href="https://www.youtube.com/watch?v=SwkjqGd8NC4" 
-         style="color: #721c24; text-decoration: underline;">Winning the Losing Game</a>, 
+         style="color: #721c24; text-decoration: underline;">How to Win the Loser's Game: Full Version</a>, 
       and explore the 
       <a href="https://rationalreminder.ca/podcast" 
          style="color: #721c24; text-decoration: underline;">Rational Reminder podcast</a>.</li>
